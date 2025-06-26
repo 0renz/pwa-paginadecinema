@@ -1,9 +1,12 @@
+import { getToken } from '../seguranca/Autenticacao';
+
 export const getDiretoresAPI = async () => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/diretor`,
         {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             }
         })
     const data = await response.json()
@@ -15,7 +18,8 @@ export const getDiretorPorCodigoAPI = async codigo => {
         {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             }
         });
     const data = await response.json();
@@ -27,7 +31,8 @@ export const deleteDiretorPorCodigoAPI = async codigo => {
         {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "authorization": getToken()
             }
         });
     const data = await response.json();
@@ -37,7 +42,7 @@ export const deleteDiretorPorCodigoAPI = async codigo => {
 export const cadastraDiretorAPI = async (objeto, metodo) => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/diretor`, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "authorization": getToken() },
         body: JSON.stringify(objeto),
     })
     const data = await response.json();

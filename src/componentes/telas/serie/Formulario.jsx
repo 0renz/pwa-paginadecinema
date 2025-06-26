@@ -5,14 +5,14 @@ import Col from 'react-bootstrap/Col';
 import CampoEntrada from '../../comuns/CampoEntrada';
 import Dialogo from '../../comuns/Dialogo';
 import CampoSelect from '../../comuns/CampoSelect';
-import CampoEntradaTextArea from '../../comuns/CampoEntradaTextArea';
 
 function Formulario() {
 
     const { objeto, handleChange, acaoCadastrar, alerta, exibirForm, setExibirForm, listaDiretores } = useContext(SerieContext);
+    
 
     return (
-        <Dialogo id="modalEdicao" titulo="Produto"
+        <Dialogo id="modalEdicao" titulo="Serie"
             idform="formulario" acaoCadastrar={acaoCadastrar}
             exibirForm={exibirForm} setExibirForm={setExibirForm}>
             <Alerta alerta={alerta} />
@@ -44,7 +44,7 @@ function Formulario() {
                     maxCaracteres={5} />
             </Col>
             <Col xs={12} md={12}>
-                <CampoSelect value={objeto.diretor_id}
+                <CampoSelect value={objeto.diretor}
                     id="txtDiretor" name="diretor_id" label="Diretor"
                     onchange={handleChange}
                     msginvalido="Informe o diretor"

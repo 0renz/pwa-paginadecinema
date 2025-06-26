@@ -4,8 +4,12 @@ import { getDiretoresAPI, getDiretorPorCodigoAPI, deleteDiretorPorCodigoAPI, cad
 import Tabela from './Tabela';
 import Formulario from './Formulario';
 import Carregando from '../../comuns/Carregando';
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom";
 
 function Diretor() {
+
+    let navigate = useNavigate();
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
@@ -39,8 +43,7 @@ function Diretor() {
             setAlerta({ status: "", message: "" });
             setExibirForm(true);
         } catch (error) {
-            console.error("Erro ao buscar diretor para edição:", error);
-            setAlerta({ status: "error", message: "Erro ao carregar dados do diretor para edição." });
+            navigate("/login", { replace: true });
         }
     };
 
@@ -56,7 +59,7 @@ function Diretor() {
             }
         } catch (err) {
             console.error(err.message);
-            setAlerta({ status: "error", message: "Erro ao salvar diretor." }); // Provide feedback
+            navigate("/login", { replace: true });
         }
         setExibirForm(false); // Close the form on successful save
         recuperaDiretores(); // Refresh the list
@@ -77,6 +80,7 @@ function Diretor() {
             } catch (error) {
                 console.error("Erro ao remover diretor:", error);
                 setAlerta({ status: "error", message: "Erro ao remover diretor." });
+                navigate("/login", { replace: true });
             }
         }
     };
@@ -108,4 +112,4 @@ function Diretor() {
     );
 }
 
-export default Diretor;
+export default WithAuth(Diretor);

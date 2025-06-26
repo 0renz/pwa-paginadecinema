@@ -9,7 +9,7 @@ const Alerta = ({ alerta = { message: '', status: '' } }) => {
         setExibir(true);
         setTimeout(() => {
             setExibir(false);
-        }, 20000);
+        }, 5000);
     }, [alerta]);
 
     return (

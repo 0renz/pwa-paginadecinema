@@ -6,10 +6,11 @@ import Tabela from './Tabela';
 import Formulario from './Formulario';
 import Carregando from '../../comuns/Carregando';
 import Alerta from '../../comuns/Alerta';
-
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom";
 
 function Filme() {
-
+    let navigate = useNavigate();
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [listaDiretores, setListaDiretores] = useState([]);
@@ -34,7 +35,7 @@ function Filme() {
                 recuperaFilmes();
             } catch (error) {
                 console.error("Erro ao remover filme:", error);
-                setAlerta({ status: "error", message: "Erro ao remover filme." });
+                navigate("/login", { replace: true });
             }
         }
     }
@@ -74,7 +75,7 @@ function Filme() {
             setExibirForm(true);
         } catch (error) {
             console.error("Erro ao buscar filme para edição:", error);
-            setAlerta({ status: "error", message: "Erro ao carregar dados do filme para edição." });
+            navigate("/login", { replace: true });
         }
     }
 
@@ -85,15 +86,14 @@ function Filme() {
             let retornoAPI = await cadastraFilmeAPI(objeto, metodo);
             setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
             if (!editar) {
-                // If it was a new item, maybe clear the form state or keep it if needed
-                setObjeto({ codigo: 0, nome: "", data_lancamento: "", diretor_id: 0 }); // Clear the form state for new item
+                setObjeto({ codigo: 0, nome: "", data_lancamento: "", diretor_id: 0 });
             }
         } catch (err) {
             console.error(err.message);
-            setAlerta({ status: "error", message: "Erro ao salvar filme." }); // Provide feedback
+            navigate("/login", { replace: true });
         }
-        setExibirForm(false); // Close the form on successful save
-        recuperaFilmes(); // Refresh the list of films
+        setExibirForm(false);
+        recuperaFilmes(); 
     };
 
     const handleChange = (e) => {
@@ -132,4 +132,4 @@ function Filme() {
     );
 }
 
-export default Filme;
+export default WithAuth(Filme);

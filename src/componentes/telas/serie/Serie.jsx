@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import SerieContext from './SerieContext';
 import { getDiretoresAPI } from '../../../servicos/DiretorServico';
-import { getSeriesAPI, getSeriesPorCodigoAPI, deleteSeriesPorCodigoAPI, cadastraSerieAPI} from '../../../servicos/SerieServico';
+import { getSeriesAPI, getSeriesPorCodigoAPI, deleteSeriesPorCodigoAPI, cadastraSerieAPI } from '../../../servicos/SerieServico';
 import Tabela from './Tabela';
 import Formulario from './Formulario';
 import Carregando from '../../comuns/Carregando';
 import Alerta from '../../comuns/Alerta';
-
+import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom";
 
 function Serie() {
-
+    let navigate = useNavigate();
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [listaDiretores, setListaDiretores] = useState([]);
@@ -21,7 +22,7 @@ function Serie() {
         setCarregando(false);
     }
 
-    
+
     const recuperaDiretores = async () => {
         setListaDiretores(await getDiretoresAPI());
     }
@@ -35,13 +36,14 @@ function Serie() {
             } catch (error) {
                 console.error("Erro ao remover série:", error);
                 setAlerta({ status: "error", message: "Erro ao remover série." });
+                navigate("/login", { replace: true });
             }
         }
     }
 
     useEffect(() => {
         recuperaSeries();
-        recuperaDiretores();        
+        recuperaDiretores();
     }, []);
 
     const [editar, setEditar] = useState(false);
@@ -52,7 +54,7 @@ function Serie() {
         nome: "",
         data_lancamento: "",
         qtd_temporadas: 0,
-		diretor_id: 0,
+        diretor_id: 0,
     })
 
     const novoObjeto = () => {
@@ -70,6 +72,12 @@ function Serie() {
 
     const editarObjeto = async codigo => {
         try {
+            // ---- DEBUG: INÍCIO ----
+            // Vamos ver o que a API REALMENTE retorna
+            console.log('Buscando dados da série com código:', codigo);
+            const dadosBrutosDaAPI = await getSeriesPorCodigoAPI(codigo);
+            console.log('RESPOSTA BRUTA DA API:', dadosBrutosDaAPI);
+            // ---- DEBUG: FIM ------
             setObjeto(await getSeriesPorCodigoAPI(codigo));
             setEditar(true);
             setAlerta({ status: "", message: "" });
@@ -77,6 +85,7 @@ function Serie() {
         } catch (error) {
             console.error("Erro ao buscar serie para edição:", error);
             setAlerta({ status: "error", message: "Erro ao carregar dados da série para edição." });
+            navigate("/login", { replace: true });
         }
     }
 
@@ -92,6 +101,7 @@ function Serie() {
         } catch (err) {
             console.error(err.message);
             setAlerta({ status: "error", message: "Erro ao salvar série." }); // Provide feedback
+            navigate("/login", { replace: true });
         }
         setExibirForm(false); // Close the form on successful save
         recuperaSeries(); // Refresh the list of series
@@ -133,4 +143,4 @@ function Serie() {
     );
 }
 
-export default Serie;
+export default WithAuth(Serie);
