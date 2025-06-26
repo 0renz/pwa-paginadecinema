@@ -93,6 +93,7 @@ function Serie() {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
         try {
+            console.log("JSON enviado para a API:", objeto);
             let retornoAPI = await cadastraSerieAPI(objeto, metodo);
             setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
             if (!editar) {

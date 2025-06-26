@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 
 function UsuarioPerfil() {
   const [usuario, setUsuario] = useState({});
-  const [alerta, setAlerta] = useState({});
+  const [alerta, setAlerta] = useState({ status: "", message: "" });
 
   useEffect(() => {
     getUsuarioAPI().then(setUsuario);
@@ -18,11 +18,28 @@ function UsuarioPerfil() {
     setUsuario(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    atualizaUsuarioAPI(usuario)
-      .then(res => setAlerta({ tipo: "success", mensagem: res.mensagem }))
-      .catch(err => setAlerta({ tipo: "danger", mensagem: err.erro }));
+
+    // Validação básica
+    if (!usuario.nome || !usuario.telefone || !usuario.tipo || !usuario.senha) {
+      setAlerta({ status: "error", message: "Preencha todos os campos obrigatórios." });
+      return;
+    }
+
+    try {
+      const resposta = await atualizaUsuarioAPI(usuario);
+
+      if (resposta.status === "success") {
+        setAlerta({ status: "success", message: "Dados atualizados com sucesso!" });
+      } else {
+        setAlerta({ status: "error", message: resposta.message || "Erro ao atualizar." });
+      }
+
+    } catch (err) {
+      console.error(err);
+      setAlerta({ status: "error", message: err.message || "Erro desconhecido ao atualizar." });
+    }
   };
 
   return (

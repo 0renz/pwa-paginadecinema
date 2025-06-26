@@ -18,7 +18,7 @@ function Diretor() {
     const [objeto, setObjeto] = useState({
         codigo: "", nome: ""
     });
-    const [carregando, setCarregando] = useState(false);
+    const [carregando, setCarregando] = useState(true);
 
     const recuperaDiretores = async () => {
         setCarregando(true);
@@ -106,7 +106,9 @@ function Diretor() {
                 remover, toggleForm, carregando, setCarregando
             }
         }>
-            <Tabela />
+            <Carregando carregando={carregando}>
+                <Tabela />
+            </Carregando>
             <Formulario />
         </DiretorContext.Provider>
     );
